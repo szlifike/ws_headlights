@@ -18,10 +18,6 @@ end
 
 RegisterNetEvent('ws_headlights:itemUse')
 AddEventHandler('ws_headlights:itemUse', function(source)
-  local ped = GetPlayerPed(-1)
-	local vehicle = GetVehiclePedIsIn(ped)
-  local vehicleHealth = GetVehicleEngineHealth(vehicle)
-
   lib.registerContext({
     id = 'headlight_menu',
     title = 'Xenon Lights',

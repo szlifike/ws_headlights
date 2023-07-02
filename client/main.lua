@@ -1,33 +1,34 @@
-ESX = exports['es_extended']:getSharedObject()
+local options = {};
 
-local options = {}
-for _,v in ipairs(Config.Headlights) do
-    table.insert(options, {
-        title = v.label,
-        icon = 'lightbulb',
-        iconColor = v.iconColor,
-        disabled = disabled,
-        onSelect = function()
-          local veh = GetVehiclePedIsUsing(PlayerPedId())
-          ToggleVehicleMod(veh, 22, true)
-          SetVehicleHeadlightsColour(veh, v.index)
-          TriggerServerEvent('ws_headlights:removeItem', source)
-        end
-    })
-end
+CreateThread(function()
+  for i = 1, #Config.Headlights do
+    local label = Config.Headlights[i].label;
+    local color = Config.Headlights[i].iconColor;
+    options[i] = {
+      title = label,
+      icon = 'lightbulb',
+      iconColor = color,
+      onSelect = function()
+        local veh = GetVehiclePedIsUsing(cache.ped);
+        ToggleVehicleMod(veh, 22, true);
+        SetVehicleXenonLightsColor(veh, Config.Headlights[i].index);
+        TriggerServerEvent('ws_headlights:removeItem');
+      end
+    };
+  end
 
-RegisterNetEvent('ws_headlights:itemUse')
-AddEventHandler('ws_headlights:itemUse', function(source)
   lib.registerContext({
-    id = 'headlight_menu',
+    id = 'ws_headlights_headlight_menu',
     title = 'Xenon Lights',
     options = options
-  })
-  lib.showContext('headlight_menu')
-end)
+  });
+end);
 
-RegisterNetEvent('ws_headlights:not_in_vehicle_notify')
-AddEventHandler('ws_headlights:not_in_vehicle_notify', function(source)
+RegisterNetEvent('ws_headlights:useItem', function()
+  lib.showContext('ws_headlights_headlight_menu')
+end);
+
+RegisterNetEvent('ws_headlights:not_in_vehicle_notify', function()
   lib.notify({
     title = 'Hiba',
     description = 'Nem ülsz járműben!',
@@ -39,5 +40,5 @@ AddEventHandler('ws_headlights:not_in_vehicle_notify', function(source)
           color = '#909296'
         }
     },
-})
-end)
+  });
+end);

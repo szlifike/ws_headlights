@@ -41,5 +41,3 @@ AddEventHandler('ws_headlights:not_in_vehicle_notify', function(source)
     },
 })
 end)
-
-test
